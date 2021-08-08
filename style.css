@@ -17,7 +17,7 @@ body{
     color: #a8dadc;
     font-family: 'Rubik', sans-serif;
     text-shadow: 1px 1px 1px  black;
-    /* //font-family: 'Shadows Into Light', cursive; */
+    /* //font-family: inherit; */
     
 }
 .next-div{
@@ -31,7 +31,8 @@ body{
 p{
     text-align: center;
     padding: 15px;
-    font-family: 'Shadows Into Light', cursive;
+    font-family: inherit;
+    font-weight: 300;
     color:white;
 }
 
