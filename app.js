@@ -1,80 +1,90 @@
-var nxtbtn = document.querySelector(".nxtbtn");
-var inputamt = document.querySelector(".inputbox");
-var nextdiv = document.querySelector(".next-div");
-var emsg = document.querySelector(".emsg");
-var outputamt = document.querySelector(".outputbox");
-var check = document.querySelector(".check")
-var cashmsg = document.querySelector(".cashm");
-var tt = document.querySelector(".ttable");
+//Input fields
+const billAmount = document.querySelector('#bill-amnt');
+const cashAmount = document.querySelector('#cash-amnt');
+// BUTTONS
+const nextBtn = document.querySelector('#next-btn');
+const checkBtn = document.querySelector('#check-btn');
+// ERROR MSGS
+const errorMsg = document.querySelector('#error');
+const errorMsg2 = document.querySelector('#error-2');
+errorMsg.style.display = 'none';
+//DIVS
+const invisible = document.querySelector('#invisible');
+const table = document.querySelector('.box-3');
+// Number of notes
+const notes = [2000, 500, 100, 20, 10, 5, 1];
 
-hide(nextdiv);
-hide(cashmsg);
-hide(tt);
-nxtbtn.addEventListener("click", function checkBill() {
-    if (Number(inputamt.value) > 0) {
-        hide(emsg);
+var numNotes = document.querySelectorAll('.num-notes');
+//
+invisible.style.display = 'none';
+table.style.display = 'none';
+// Event Listeners
+nextBtn.addEventListener('click', nextBtnClick);
+checkBtn.addEventListener('click', checkBtnClick);
+
+// VARIABLES
+var bill = 0; // BILL AMOUNT
+var cash = 0; // CASH AMOUNT
+
+// button click handlers
+function nextBtnClick() {
+    if (billAmount.value > 0) {
+        invisible.style.display = 'block';
+        errorMsg.style.display = 'none';
+        nextBtn.style.display = 'none';
+        return;
+    } else {
+        return (errorMsg.style.display = 'block');
+    }
+}
+function checkBtnClick() {
+    bill = Number(billAmount.value);
+    cash = Number(cashAmount.value);
+
+    if (bill < 0 || cash < 0) {
+        errorMsg2.innerHTML = 'Values should be greater than zero!';
+        errorMsg2.style.display = 'block';
+        table.style.display = 'none';
+        return;
+    } else if (cash < bill) {
+        errorMsg2.innerHTML = 'Cash amount is less than bill amount';
+        errorMsg2.style.display = 'block';
+        table.style.display = 'none';
+    } else {
+        errorMsg2.style.display = 'none';
+        calculateNotes(bill, cash);
+    }
+    // 	if (billAmount.value > 0 && cashAmount.value >= billAmount.value) {
+
+    // 	} else if (cashAmount.value < billAmount.value) {
+    // 	} else {
+    // 		errorMsg2.innerHTML = 'Cash is less than bill, please enter right amount';
+    // 		errorMsg2.style.display = 'block';
+    // 		table.style.display = 'none';
+    // 	}
+    // }
+}
+// NOTE CALC
+function calculateNotes(bill, cash) {
+    var diff = cash - bill;
+    console.log(diff);
+    if (diff === 0) {
+        errorMsg2.innerHTML = 'No amount should be returned';
+        errorMsg2.style.display = 'block';
+        return;
+    } else if (diff > 0) {
+        table.style.display = 'block';
+
         for (var i = 0; i < 7; i++) {
-            var req = document.querySelector(".row" + i);
-            req.innerText = "";
+            var curr = Math.trunc(diff / notes[i]);
+            console.log(i + 'curr: ' + curr);
+            numNotes[i].innerText = curr;
+            diff = diff % notes[i];
         }
-        show(nextdiv, "flex");
     } else {
-        errormessage(emsg, "Please enter correct Bill amount");
-        show(emsg, "block");
-        hide(nextdiv);
+        errorMsg2.innerHTML = 'Cash is less than bill, please enter right amount';
+        errorMsg2.style.display = 'block';
+        table.style.display = 'none';
     }
-})
-
-check.addEventListener("click", function checkit() {
-    if (Number(outputamt.value) < Number(inputamt.value)) {
-        errormessage(cashmsg, "Do you want to wash plates?");
-        show(cashmsg, "block");
-        hide(tt);
-
-    } else if (Number(outputamt.value) === Number(inputamt.value)) {
-        errormessage(cashmsg, "Great! you paid the exact amount");
-        show(cashmsg, "block");
-        hide(tt);
-
-    } else {
-
-        var amount = Number(outputamt.value) - Number(inputamt.value);
-        returnAmount(amount);
-
-    }
-})
-
-
-const bills = [2000, 500, 100, 20, 10, 5, 1];
-function returnAmount(amount) {
-
-
-    for (var i = 0; i < bills.length; i++) {
-        var c = Math.trunc(amount / bills[i]);
-
-        if (c > 0) {
-            var req = document.querySelector(".row" + i);
-
-            req.innerText = c;
-        }
-        amount = amount % bills[i];
-    }
-    show(tt, "block");
-    hide(cashmsg);
-
-
-}
-
-
-
-
-function show(inpt, typ) {
-    inpt.style.display = typ;
-}
-function hide(inpt) {
-    inpt.style.display = "none";
-}
-function errormessage(typ, msg) {
-    typ.innerText = msg;
-
+    console.log(bill, cash);
 }
